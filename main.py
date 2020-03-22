@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask import Flask, request, render_template, redirect
 from sqlalchemy.exc import IntegrityError
 from form import myForm
+from models import Log, db
 ''' Begin boilerplate code '''
 
 
@@ -12,6 +13,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     app.config['SECRET_KEY'] = "MYSECRET"
+    db.init_app(app)
     return app
 
 
@@ -33,10 +35,14 @@ def client_app():
     return app.send_static_file('app.html')
 
 
-@app.route('/logs', methods=['POST'])
+@app.route('/logs', methods=['POST', 'GET'])
 def func():
     data = request.form
-    print(json.dumps(data))
+    log = Log(stream=int(data['stream']), id=int(data['id']))
+    db.session.add(log)
+    db.session.commit()
+    # print(data)
+
     return redirect('/app', code=302)
 
 
