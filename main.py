@@ -1,7 +1,8 @@
 import json
 from flask_cors import CORS
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 from sqlalchemy.exc import IntegrityError
+from form import myForm
 ''' Begin boilerplate code '''
 
 
@@ -27,7 +28,16 @@ def index():
 
 @app.route('/app')
 def client_app():
+    form = myForm()
+
     return app.send_static_file('app.html')
+
+
+@app.route('/logs', methods=['POST'])
+def func():
+    data = request.form
+    print(json.dumps(data))
+    return redirect('/app', code=302)
 
 
 if __name__ == '__main__':

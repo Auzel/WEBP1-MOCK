@@ -7,6 +7,16 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Your Application</h1>
+    <form id= 'myForm' action = "/logs", method = "post">
+        <input type ='TextField' id = 'stdid' name = 'id' required>
+        <select id = 'stream' name = 'stream'>
+            <option value = '1'>stream1</option>
+            <option value = '2'>stream2</option>
+            <option value = '3'>stream3</option>
+        </select>
+
+        <input type = 'submit' value = 'Add' id = 'addBtn'>
+    </form>
+    
 </body>
 </html>

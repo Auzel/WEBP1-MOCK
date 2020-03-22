@@ -11,6 +11,7 @@ colorama==0.4.3
 Flask==1.0.2
 Flask-Cors==3.0.8
 Flask-SQLAlchemy==2.4.1
+Flask-WTF==0.14.3
 gitdb==4.0.2
 GitPython==3.1.0
 html5lib==1.0.1
@@ -45,5 +46,6 @@ tomlkit==0.5.11
 urllib3==1.25.8
 webencodings==0.5.1
 Werkzeug==1.0.0
+WTForms==2.2.1
 yapf==0.29.0
 zipp==3.1.0
