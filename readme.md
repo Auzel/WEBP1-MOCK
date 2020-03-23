@@ -2,11 +2,4 @@
 
 # Running The Application
 ```
-python3 main.py
-```
-
-# Initialize The Database
-
-```
-python3 initDB.py
-```
+[![Run on Repl.it](https://repl.it/badge/github/ramith123/WEBP1-MOCK)](https://repl.it/github/ramith123/WEBP1-MOCK)
