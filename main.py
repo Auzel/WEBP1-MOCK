@@ -4,6 +4,7 @@ from flask import Flask, request, render_template, redirect
 from sqlalchemy.exc import IntegrityError
 from form import myForm
 from models import Log, db
+from time import sleep
 ''' Begin boilerplate code '''
 
 
@@ -37,13 +38,35 @@ def client_app():
 
 @app.route('/logs', methods=['POST', 'GET'])
 def func():
-    data = request.form
-    log = Log(stream=int(data['stream']), id=int(data['id']))
-    db.session.add(log)
-    db.session.commit()
-    # print(data)
 
-    return redirect('/app', code=302)
+    if request.method == 'POST':
+        data = request.form
+        log = Log(stream=int(data['stream']), id=int(data['id']))
+        try:
+            db.session.add(log)
+            db.session.commit()
+        except ValueError:
+            return "ID must be an  integer"
+        except IntegrityError:
+            return ("ID already exist")
+
+        return "created", 201
+    else:
+        data = Log.query.order_by(Log.timestamp).all()
+        logs = [log.toDict() for log in data]
+        return json.dumps(logs)
+
+
+@app.route('/logs/<pid>', methods=['PUT'])
+def func2(pid):
+    data = int(request.data)
+    user = Log.query.filter_by(id=pid).first()
+    print(user)
+    user.stream = data
+    db.session.add(user)
+    db.session.commit()
+
+    return "updated", 201
 
 
 if __name__ == '__main__':

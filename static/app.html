@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
     <title>Document</title>
 </head>
 <body>
-    <form id= 'myForm' action = "/logs", method = "post">
+    <form id= 'myForm' action = '/logs', method = 'post'>
         <input type ='TextField' id = 'stdid' name = 'id' required>
         <select id = 'stream' name = 'stream'>
             <option value = '1'>stream1</option>
@@ -29,11 +30,86 @@
 
         </tbody>
     </table>
-    
+    <div id="container" style="width:100%; height:400px;"></div>
 </body>
 
 <script>
     
+    let url = "http://localhost:8080/logs"
+  async function fill(){
+    let response = await fetch(url);
+    let result = await response.json();
+    drawtable(result);
+    drawChart(result);
 
+
+    }
+   
+    function drawtable(records){
+        let table = document.querySelector('#result');
+        let re = "";
+        for (let a of records){
+            re +=`<tr>
+            <td>${a.id}</td>
+            <td>${a.timestamp}</td>
+            <td>${a.stream}</td>
+            <td><input type = "button" value= "Edit"/ onclick = "promptForEdit(${a.id})"></td>
+            </tr>`;
+        }
+        table.innerHTML = re;
+    }
+    function promptForEdit(id){
+        let person = 0;
+        
+        person = prompt("Enter new stream", "1 , 2 or 3");
+        if (person== 1 || person== 2 || person == 3)
+            putData(url,id,person);
+
+        
+    }
+    async function putData(url,id,data){
+        let urls = url + `/${id}`;
+        let res = await fetch (urls,{
+            method : 'PUT',
+            body : data
+        });
+        let result = await res.text();
+        console.log(result);
+        fill();
+
+    }
+    fill();
+    function drawChart(data) {
+        let s1 = s2 = s3 = 0;
+        for (let e of data){
+            if (e.stream ==1)
+                s1++;
+            else if (e.stream == 2)
+                s2++;
+            else
+                s3++;
+
+        }
+        var myChart = Highcharts.chart('container', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Logs'
+            },
+            xAxis: {
+                categories: ['Stream 1', 'Stream 2', 'Stream 3']
+            },
+            yAxis: {
+                title: {
+                    text: 'attendence'
+                }
+            },
+            series: [{
+                name : "Class stream allocation",
+                data: [s1, s2, s3]
+            }]
+        });
+    }
 </script>
 </html>
